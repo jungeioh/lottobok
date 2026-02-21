@@ -1,1 +1,116 @@
-/* Add styles here */
+/* style.css */
+@layer base, components;
+
+@layer base {
+    :root {
+        --color-bg: oklch(20% 0.05 230);
+        --color-primary: oklch(70% 0.2 260);
+        --color-text: oklch(95% 0.01 230);
+        --font-body: 'Helvetica Neue', sans-serif;
+        --font-display: 'Arial Black', sans-serif;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        margin: 0;
+        display: grid;
+        place-content: center;
+        min-height: 100vh;
+        overflow: hidden; /* Hide noise overflow */
+    }
+
+    body::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><rect fill='hsl(230, 30%, 10%)' width='800' height='800'/><g fill-opacity='0.2'><circle fill='hsl(230, 30%, 10%)' cx='400' cy='400' r='600'/><circle fill='hsl(230, 20%, 20%)' cx='400' cy='400' r='500'/><circle fill='hsl(230, 15%, 30%)' cx='400' cy='400' r='400'/><circle fill='hsl(230, 10%, 40%)' cx='400' cy='400' r='300'/><circle fill='hsl(230, 5%, 50%)' cx='400' cy='400' r='200'/><circle fill='hsl(230, 0%, 60%)' cx='400' cy='400' r='100'/></g></svg>");
+        background-size: cover;
+        opacity: 0.05;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 0 0 10px oklch(70% 0.2 260 / 0.5), 0 0 20px oklch(70% 0.2 260 / 0.3);
+    }
+}
+
+@layer components {
+    .container {
+        text-align: center;
+        padding: 2rem;
+        background: oklch(25% 0.05 230 / 0.5);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid oklch(70% 0.2 260 / 0.2);
+        box-shadow: 0 10px 30px oklch(0 0 0 / 0.2), 0 0 0 1px oklch(70% 0.2 260 / 0.1);
+    }
+
+    #numbers-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+        min-height: 100px;
+    }
+
+    .number-row {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .number {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: grid;
+        place-content: center;
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: 0 5px 15px oklch(0 0 0 / 0.3), inset 0 -2px 5px oklch(0 0 0 / 0.2);
+        transition: all 0.3s ease;
+        animation: appear 0.5s ease backwards;
+    }
+
+    @keyframes appear {
+        from { transform: scale(0.5) translateY(20px); opacity: 0; }
+        to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    #generate-btn {
+        font-family: var(--font-body);
+        font-size: 1.2rem;
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 50px;
+        background-color: var(--color-primary);
+        color: white;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px oklch(70% 0.2 260 / 0.6), 0 0 25px oklch(70% 0.2 260 / 0.4);
+    }
+
+    #generate-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px oklch(70% 0.2 260 / 0.8), 0 0 35px oklch(70% 0.2 260 / 0.6);
+    }
+
+    #generate-btn svg {
+        transition: transform 0.5s ease;
+    }
+
+    #generate-btn:hover svg {
+        transform: rotate(360deg);
+    }
+}
