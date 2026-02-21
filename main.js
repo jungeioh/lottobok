@@ -12,10 +12,7 @@ const hideSplash = () => {
     }
 };
 
-// Remove splash after 3 seconds total regardless of window load
 setTimeout(hideSplash, 3000);
-
-// Also try on window load for safety
 window.addEventListener('load', hideSplash);
 
 const generateBtn = document.getElementById('generate-btn');
@@ -26,10 +23,10 @@ const moonIcon = document.getElementById('moon-icon');
 
 // Lotto Round Calculation
 function getCurrentRound() {
-    const firstDrawDate = new Date('2002-12-07T20:00:00'); // Round 1
+    const firstDrawDate = new Date('2002-12-07T20:00:00');
     const now = new Date();
     const diffTime = Math.abs(now - firstDrawDate);
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     return Math.floor(diffDays / 7) + 1;
 }
 
@@ -78,24 +75,22 @@ const showBlessing = (luckLevel = null) => {
     if (!blessingText) return;
 
     if (!luckLevel) {
-        // Hide if no luck level (General Recommendation)
         blessingText.classList.remove('show');
         return;
     }
 
-    // Select message based on luck level
     const messages = blessingMessages[luckLevel];
     const randomIndex = Math.floor(Math.random() * messages.length);
     blessingText.textContent = messages[randomIndex];
 
     blessingText.classList.remove('show');
-    void blessingText.offsetWidth; // Trigger reflow
+    void blessingText.offsetWidth;
     blessingText.classList.add('show');
 };
 
 generateBtn.addEventListener('click', () => {
     generateLottoRows();
-    showBlessing(null); // Hide blessing text
+    showBlessing(null);
 });
 
 function generateLottoRows() {
@@ -111,7 +106,7 @@ function generateLottoNumbers(rowIndex) {
         numbers.add(Math.floor(Math.random() * 45) + 1);
     }
     const mainNumbers = Array.from(numbers).sort((a, b) => a - b);
-    
+
     let bonusNumber;
     do {
         bonusNumber = Math.floor(Math.random() * 45) + 1;
@@ -123,7 +118,7 @@ function generateLottoNumbers(rowIndex) {
 function displayNumbers(mainNumbers, bonusNumber, rowIndex) {
     const rowEl = document.createElement('div');
     rowEl.classList.add('number-row');
-    
+
     mainNumbers.forEach((number, index) => {
         const numberEl = createNumberElement(number, rowIndex, index);
         rowEl.appendChild(numberEl);
@@ -148,10 +143,6 @@ function createNumberElement(number, rowIndex, index, isBonus = false) {
     numberEl.textContent = number;
     numberEl.style.animationDelay = `${rowIndex * 0.2 + index * 0.1}s`;
     return numberEl;
-}
-
-function getNumberColor(number) {
-    return 'transparent'; // Placeholder, handled by CSS now
 }
 
 // Initial generation
@@ -189,8 +180,8 @@ let stream = null;
 faceBtn.addEventListener('click', async () => {
     try {
         cameraStatus.textContent = "카메라를 준비하고 있습니다...";
-        const constraints = { 
-            video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } 
+        const constraints = {
+            video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
         };
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         video.srcObject = stream;
@@ -223,6 +214,14 @@ function stopCamera() {
     }, 300);
 }
 
+// Determine luck level from pixel data
+function determineLuckLevel(pixelSum) {
+    const normalized = pixelSum % 100;
+    if (normalized > 70) return 'good';
+    if (normalized < 30) return 'bad';
+    return 'normal';
+}
+
 // Capture & Analyze
 captureBtn.addEventListener('click', () => {
     if (!stream) return;
@@ -231,31 +230,43 @@ captureBtn.addEventListener('click', () => {
     captureBtn.textContent = "관상 분석 중...";
     cameraStatus.textContent = "얼굴 특징을 추출하고 있습니다...";
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Canvas capture (may fail on some mobile browsers)
+    try {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    } catch (e) {
+        console.warn('Canvas capture skipped:', e);
+    }
 
     setTimeout(() => {
-        const frameData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        let pixelSum = 0;
-        for (let i = 0; i < frameData.length; i += 500) { pixelSum += frameData[i]; }
+        try {
+            // Calculate pixel-based seed if canvas has data, otherwise use random
+            let pixelSum = 0;
+            try {
+                const ctx = canvas.getContext('2d');
+                const frameData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                for (let i = 0; i < frameData.length; i += 500) { pixelSum += frameData[i]; }
+            } catch (e) {
+                pixelSum = Math.floor(Math.random() * 10000);
+            }
 
-        // 1. Determine Luck Level First (Shared State)
-        const luckLevel = determineLuckLevel(pixelSum);
+            const luckLevel = determineLuckLevel(pixelSum);
+            const reading = generateFaceReading(pixelSum, luckLevel);
+            displayFaceReading(reading);
 
-        // 2. Generate Analysis Content based on luckLevel
-        const reading = generateFaceReading(pixelSum, luckLevel);
-        displayFaceReading(reading);
-        
-        stopCamera();
-        
-        setTimeout(() => {
-            generateFaceLottoRows(pixelSum);
-            // 3. Show Blessing using the SAME luckLevel
-            showBlessing(luckLevel); 
-            numbersContainer.scrollIntoView({ behavior: 'smooth' });
-        }, 400);
+            stopCamera();
+
+            setTimeout(() => {
+                generateFaceLottoRows(pixelSum);
+                showBlessing(luckLevel);
+                numbersContainer.scrollIntoView({ behavior: 'smooth' });
+            }, 400);
+        } catch (e) {
+            console.error('Analysis error:', e);
+            stopCamera();
+        }
     }, 3000);
 });
 
