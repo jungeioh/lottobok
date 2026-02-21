@@ -311,6 +311,27 @@
         box-shadow: 0 8px 20px var(--color-primary / 0.6);
     }
 
+    .view-result-btn {
+        margin-top: 2rem;
+        background: none;
+        border: 1px solid var(--color-primary);
+        color: var(--color-primary);
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .view-result-btn:hover {
+        background: var(--color-primary);
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px var(--color-primary / 0.3);
+    }
+
     .divider {
         height: 1px;
         background: var(--container-border);

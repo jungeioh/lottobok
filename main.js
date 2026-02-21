@@ -217,10 +217,9 @@ captureBtn.addEventListener('click', () => {
 
     // Simulate Analysis Delay
     setTimeout(() => {
-        // Generate numbers based on pixel data (Simulation)
+        // Generate results in background
         const frameData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         let pixelSum = 0;
-        // Sample pixels to create a seed
         for (let i = 0; i < frameData.length; i += 500) {
             pixelSum += frameData[i];
         }
@@ -231,11 +230,11 @@ captureBtn.addEventListener('click', () => {
         
         stopCamera();
         
-        // Switch to the analysis section automatically
-        document.querySelector('[data-target="inquiry-section"]').click();
+        // Success feedback
+        alert("관상 분석을 통한 행운의 번호가 도착했습니다!");
         
-        // Scroll to the result
-        document.getElementById('inquiry-section').scrollIntoView({ behavior: 'smooth' });
+        // Scroll to numbers instead of switching tabs
+        numbersContainer.scrollIntoView({ behavior: 'smooth' });
 
     }, 3000); // 3-second scan simulation
 });
@@ -296,4 +295,15 @@ function generateFaceLottoRows(seed) {
     for (let i = 0; i < 5; i++) {
         generateLottoNumbers(i); 
     }
+
+    // Add "View Analysis" button at the bottom of the numbers
+    const viewResultBtn = document.createElement('button');
+    viewResultBtn.id = 'view-analysis-link';
+    viewResultBtn.innerHTML = '나의 관상 풀이 결과 보기 ➔';
+    viewResultBtn.className = 'view-result-btn';
+    viewResultBtn.onclick = () => {
+        document.querySelector('[data-target="inquiry-section"]').click();
+        document.getElementById('inquiry-section').scrollIntoView({ behavior: 'smooth' });
+    };
+    numbersContainer.appendChild(viewResultBtn);
 }
