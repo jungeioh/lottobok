@@ -341,22 +341,10 @@ const winningResult = document.getElementById('winning-result');
 if (roundInput) roundInput.value = getLastDrawnRound();
 
 async function fetchLottoResult(drwNo) {
-    const targetUrl = `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${drwNo}`;
-    const proxies = [
-        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
-        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`,
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
-    ];
-    for (const proxyUrl of proxies) {
-        try {
-            const response = await fetch(proxyUrl);
-            if (!response.ok) continue;
-            const text = await response.text();
-            const data = JSON.parse(text);
-            if (data.returnValue === 'success') return data;
-        } catch (e) { continue; }
-    }
-    throw new Error('All proxies failed');
+    const firebaseUrl = `https://us-central1-blog-product-52707032-c02af.cloudfunctions.net/getLottoResult?drwNo=${drwNo}`;
+    const response = await fetch(firebaseUrl);
+    if (!response.ok) throw new Error('API request failed');
+    return response.json();
 }
 
 function formatPrize(amount) {
