@@ -1,4 +1,4 @@
-/* main.js */
+/* main.js - Lotto Generator with Theme Support and Bonus Numbers */
 const generateBtn = document.getElementById('generate-btn');
 const numbersContainer = document.getElementById('numbers-container');
 const themeToggle = document.getElementById('theme-toggle');
@@ -95,3 +95,13 @@ function getNumberColor(number) {
 
 // Initial generation
 generateLottoRows();
+
+// Form Submission handling (UX improvement)
+const inquiryForm = document.getElementById('inquiry-form');
+inquiryForm.addEventListener('submit', (e) => {
+    // Formspree handles the actual POST, we just add a small UI feedback
+    setTimeout(() => {
+        inquiryForm.reset();
+        alert('문의가 성공적으로 전송되었습니다. 감사합니다!');
+    }, 1000);
+});
