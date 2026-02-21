@@ -131,16 +131,6 @@ navBtns.forEach(btn => {
     });
 });
 
-// Form Submission handling (UX improvement)
-const inquiryForm = document.getElementById('inquiry-form');
-inquiryForm.addEventListener('submit', (e) => {
-    // Formspree handles the actual POST, we just add a small UI feedback
-    setTimeout(() => {
-        inquiryForm.reset();
-        alert('상담 신청이 정상적으로 접수되었습니다. 곧 풀이 결과를 전달해 드리겠습니다!');
-    }, 1000);
-});
-
 /* --- Face Analysis Logic --- */
 const faceBtn = document.getElementById('face-btn');
 const cameraModal = document.getElementById('camera-modal');
@@ -214,26 +204,75 @@ captureBtn.addEventListener('click', () => {
             pixelSum += frameData[i];
         }
 
+        const reading = generateFaceReading(pixelSum);
+        displayFaceReading(reading);
         generateFaceLottoRows(pixelSum);
         
         stopCamera();
-        alert("관상 분석이 완료되었습니다! 당신의 얼굴에 숨겨진 행운의 번호입니다.");
         
-        // Ensure we show the lotto section
-        document.querySelector('[data-target="lotto-section"]').click();
+        // Switch to the analysis section automatically
+        document.querySelector('[data-target="inquiry-section"]').click();
+        
+        // Scroll to the result
+        document.getElementById('inquiry-section').scrollIntoView({ behavior: 'smooth' });
 
     }, 3000); // 3-second scan simulation
 });
 
+function generateFaceReading(seed) {
+    const wealthReadings = [
+        "이마가 넓고 훤하여 초년운이 좋으며, 중년 이후 큰 재물을 모을 상입니다.",
+        "코끝이 도톰하고 콧망울이 단단하여 재물이 새어나가지 않고 차곡차곡 쌓일 관상입니다.",
+        "입술의 끝이 위로 살짝 올라가 있어 들어온 복을 놓치지 않는 재물 그릇을 가졌습니다.",
+        "눈매가 깊고 그윽하여 돈의 흐름을 읽는 능력이 탁월하며 횡재수가 따릅니다."
+    ];
+    
+    const personalityReadings = [
+        "눈동자가 맑고 빛이 나니 성품이 강직하고 주변의 신망을 얻는 리더의 기질이 있습니다.",
+        "눈썹의 흐름이 부드러워 대인관계가 원만하며 귀인의 도움을 많이 받을 성격입니다.",
+        "턱 선이 견고하여 인내심이 강하고 한번 시작한 일은 끝을 보는 우직함이 돋보입니다.",
+        "전체적인 이목구비의 조화가 좋아 창의적이고 예술적인 감각이 뛰어난 성격입니다."
+    ];
+    
+    const luckReadings = [
+        "현재 미간의 기운이 매우 맑아 곧 인생의 큰 전환점이 될 행운이 찾아올 시기입니다.",
+        "광대의 기세가 좋아 명예운이 따르며, 자신의 분야에서 이름을 널리 알릴 운명입니다.",
+        "귀가 두툼하고 귓볼이 넉넉하여 무병장수하며 말년까지 평안한 복을 누릴 상입니다.",
+        "양 눈의 균형이 완벽하여 큰 어려움 없이 평탄하고 안정적인 성공 가도를 달릴 것입니다."
+    ];
+
+    // Select based on seed
+    return {
+        wealth: wealthReadings[seed % wealthReadings.length],
+        personality: personalityReadings[(seed + 7) % personalityReadings.length],
+        luck: luckReadings[(seed + 13) % luckReadings.length]
+    };
+}
+
+function displayFaceReading(reading) {
+    const container = document.getElementById('face-analysis-result');
+    container.innerHTML = `
+        <div class="analysis-item">
+            <h3>💰 재물운</h3>
+            <p>${reading.wealth}</p>
+        </div>
+        <div class="analysis-item">
+            <h3>👤 성격 및 기질</h3>
+            <p>${reading.personality}</p>
+        </div>
+        <div class="analysis-item">
+            <h3>🌟 성공 및 총운</h3>
+            <p>${reading.luck}</p>
+        </div>
+        <div class="analysis-footer" style="text-align: center; margin-top: 1rem; opacity: 0.7; font-size: 0.8rem;">
+            * 본 분석은 재미를 위한 시뮬레이션입니다.
+        </div>
+    `;
+}
+
 function generateFaceLottoRows(seed) {
     numbersContainer.innerHTML = '';
-    
-    // Use the seed to add entropy to Math.random()
-    // This is a fun simulation, so we just re-run the generator 
-    // but seeded with intent.
     for (let i = 0; i < 5; i++) {
-        // We pass the seed to modify the 'randomness' slightly if we had a seeded RNG
-        // For now, we just generate fresh numbers which feels like a result.
         generateLottoNumbers(i); 
     }
 }

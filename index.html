@@ -55,34 +55,15 @@
 
         <section id="inquiry-section" class="content-section">
             <div class="inquiry-header">
-                <h2>관상과 사주란?</h2>
-                <div class="analysis-info">
-                    <div class="info-card">
-                        <h3>👁️ 관상 (Physiognomy)</h3>
-                        <p>얼굴의 이목구비와 형태, 찰색을 통해 타고난 운명과 성격, 그리고 현재의 운기를 파악하는 학문입니다. '대박 로또'의 관상 추천은 얼굴의 조화를 분석하여 행운의 기운을 숫자로 치환합니다.</p>
-                    </div>
-                    <div class="info-card">
-                        <h3>📅 사주 (Saju)</h3>
-                        <p>태어난 년, 월, 일, 시의 네 기둥을 바탕으로 우주의 기운과 개인의 상관관계를 풀이합니다. 사주에 부족한 기운을 채워주는 숫자가 진정한 행운의 번호가 될 수 있습니다.</p>
-                    </div>
-                </div>
-                <p class="consult-intro">더 상세한 개인별 맞춤 풀이가 필요하신가요?</p>
+                <h2>나의 관상 분석 결과</h2>
+                <p>카메라로 분석된 당신의 얼굴에 담긴 운세입니다.</p>
             </div>
-            <form action="https://formspree.io/f/mdalweyd" method="POST" id="inquiry-form">
-                <div class="form-group">
-                    <label>성함</label>
-                    <input type="text" name="name" placeholder="본인의 성함을 입력해주세요" required>
+            
+            <div id="face-analysis-result" class="analysis-container">
+                <div class="placeholder-text">
+                    <p>상단의 <b>[번호 추천]</b> 탭에서 <b>[관상 추천]</b> 버튼을 눌러 얼굴을 촬영해주세요.</p>
                 </div>
-                <div class="form-group">
-                    <label>생년월일 및 시간</label>
-                    <input type="text" name="birth" placeholder="예: 1990년 1월 1일 오전 10시" required>
-                </div>
-                <div class="form-group">
-                    <label>고민 상담 내용</label>
-                    <textarea name="message" rows="4" placeholder="재물운, 사업운 등 궁금한 내용을 상세히 적어주세요." required></textarea>
-                </div>
-                <button type="submit" id="submit-btn">심층 풀이 신청하기</button>
-            </form>
+            </div>
         </section>
 
     </div>

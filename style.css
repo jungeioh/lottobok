@@ -341,45 +341,45 @@
         color: rgb(40, 45, 55);
     }
 
-    /* Analysis Page Styles */
-    .analysis-info {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-        text-align: left;
-    }
-
-    .info-card {
-        background: var(--container-border);
-        padding: 1.5rem;
+    /* Analysis Result Styles */
+    .analysis-container {
+        background: var(--container-bg);
+        padding: 2rem;
         border-radius: 15px;
         border: 1px solid var(--container-border);
+        text-align: left;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
-    .info-card h3 {
+    .placeholder-text {
+        text-align: center;
+        opacity: 0.6;
+        margin: auto;
+    }
+
+    .analysis-item {
+        border-left: 3px solid var(--color-primary);
+        padding-left: 1rem;
+    }
+
+    .analysis-item h3 {
         font-size: 1.1rem;
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.5rem;
         color: var(--color-primary);
     }
 
-    .info-card p {
-        font-size: 0.85rem;
+    .analysis-item p {
+        font-size: 0.95rem;
         line-height: 1.6;
         opacity: 0.9;
     }
 
-    .consult-intro {
-        font-size: 1.1rem;
-        font-weight: bold;
-        margin-top: 2rem;
-        color: var(--color-text);
-        text-align: center;
-    }
-
     @media (max-width: 600px) {
-        .analysis-info {
-            grid-template-columns: 1fr;
+        .analysis-container {
+            padding: 1.5rem;
         }
     }
 
