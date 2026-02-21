@@ -30,13 +30,13 @@
         display: grid;
         place-content: center;
         min-height: 100vh;
-        overflow: hidden; /* Hide noise overflow */
         transition: background-color 0.3s ease, color 0.3s ease;
+        padding: 2rem 0;
     }
 
     body::before {
         content: '';
-        position: absolute;
+        position: fixed;
         inset: 0;
         background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><rect fill='hsl(230, 30%, 10%)' width='800' height='800'/><g fill-opacity='0.2'><circle fill='hsl(230, 30%, 10%)' cx='400' cy='400' r='600'/><circle fill='hsl(230, 20%, 20%)' cx='400' cy='400' r='500'/><circle fill='hsl(230, 15%, 30%)' cx='400' cy='400' r='400'/><circle fill='hsl(230, 10%, 40%)' cx='400' cy='400' r='300'/><circle fill='hsl(230, 5%, 50%)' cx='400' cy='400' r='200'/><circle fill='hsl(230, 0%, 60%)' cx='400' cy='400' r='100'/></g></svg>");
         background-size: cover;
@@ -168,5 +168,76 @@
 
     #generate-btn:hover svg {
         transform: rotate(360deg);
+    }
+
+    .divider {
+        height: 1px;
+        background: var(--container-border);
+        margin: 3rem 0;
+        opacity: 0.5;
+    }
+
+    .inquiry-section {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .inquiry-section h2 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.9;
+    }
+
+    #inquiry-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--container-border);
+        background: var(--container-bg);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 10px var(--color-primary);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: var(--color-text);
+        opacity: 0.5;
+    }
+
+    #submit-btn {
+        margin-top: 0.5rem;
+        padding: 0.8rem;
+        border-radius: 12px;
+        border: 1px solid var(--color-primary);
+        background: transparent;
+        color: var(--color-text);
+        font-family: var(--font-display);
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    #submit-btn:hover {
+        background: var(--color-primary);
+        color: white;
+        box-shadow: 0 0 15px var(--color-primary);
     }
 }
