@@ -154,15 +154,31 @@
         place-content: center;
         font-family: var(--font-display);
         font-size: 1.2rem;
-        color: white;
-        box-shadow: 0 5px 15px var(--shadow-color), inset 0 -2px 5px oklch(0 0 0 / 0.2);
+        color: #FFFFFF; /* Pure white for contrast */
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        
+        /* 3D Gold Gradient */
+        background: radial-gradient(circle at 30% 30%, #FFE066 0%, #AA793E 50%, #5A3910 100%);
+        
+        /* Deep 3D Shadow effects */
+        box-shadow: 
+            2px 4px 8px rgba(0,0,0,0.3), 
+            inset -3px -3px 6px rgba(0,0,0,0.4), 
+            inset 2px 2px 4px rgba(255,255,255,0.4);
+        
+        border: 1px solid #8C5E24;
         transition: all 0.3s ease;
         animation: appear 0.5s ease backwards;
     }
 
     .number.bonus {
-        border: 3px solid oklch(75% 0.15 80);
-        box-shadow: 0 0 15px oklch(75% 0.15 80 / 0.4);
+        /* Keep golden base, add extra emphasis for bonus */
+        border: 2px solid #FFD700;
+        box-shadow: 
+            0 0 15px rgba(255, 215, 0, 0.5),
+            2px 4px 8px rgba(0,0,0,0.3), 
+            inset -3px -3px 6px rgba(0,0,0,0.4), 
+            inset 2px 2px 4px rgba(255,255,255,0.4);
     }
 
     .plus-sign {

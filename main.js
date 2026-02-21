@@ -146,14 +146,12 @@ function createNumberElement(number, rowIndex, index, isBonus = false) {
     numberEl.classList.add('number');
     if (isBonus) numberEl.classList.add('bonus');
     numberEl.textContent = number;
-    numberEl.style.backgroundColor = getNumberColor(number);
     numberEl.style.animationDelay = `${rowIndex * 0.2 + index * 0.1}s`;
     return numberEl;
 }
 
 function getNumberColor(number) {
-    const hue = (number / 45) * 360;
-    return `oklch(65% 0.15 ${hue})`;
+    return 'transparent'; // Placeholder, handled by CSS now
 }
 
 // Initial generation
