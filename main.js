@@ -10,15 +10,13 @@ function getCurrentRound() {
     const firstDrawDate = new Date('2002-12-07T20:00:00'); // Round 1
     const now = new Date();
     const diffTime = Math.abs(now - firstDrawDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Use floor for full days
     return Math.floor(diffDays / 7) + 1;
 }
 
 const currentRound = getCurrentRound();
-document.addEventListener('DOMContentLoaded', () => {
-    const roundEl = document.getElementById('current-round');
-    if (roundEl) roundEl.textContent = `${currentRound}회`;
-});
+const roundEl = document.getElementById('current-round');
+if (roundEl) roundEl.textContent = `${currentRound}회`;
 
 // Theme Logic
 const currentTheme = localStorage.getItem('theme') || 'dark';
