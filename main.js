@@ -60,9 +60,20 @@ function updateThemeIcons(theme) {
 }
 
 const blessingText = document.getElementById('blessing-text');
+const blessingMessages = [
+  "❝ 필시 1등이 될 상이네. 대박 나시게나! ❞",
+  "❝ 재물운이 미간에 훤히 빛나고 있네. 꽉 잡으시게! ❞",
+  "❝ 천기를 누설하는 것이니, 아무에게도 말하지 마시게. ❞",
+  "❝ 이번 주엔 귀인을 만날 상이야. 이 번호를 믿어보시게. ❞",
+  "❝ 음... 오늘은 기운이 탁하네. 이번엔 가볍게만 하시게나. ❞"
+];
 
 const showBlessing = () => {
     if (blessingText) {
+        // Change text randomly
+        const randomIndex = Math.floor(Math.random() * blessingMessages.length);
+        blessingText.textContent = blessingMessages[randomIndex];
+
         blessingText.classList.remove('show');
         // Trigger reflow to restart animation
         void blessingText.offsetWidth; 

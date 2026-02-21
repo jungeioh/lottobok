@@ -121,13 +121,18 @@
     #blessing-text {
         font-family: 'East Sea Dokdo', cursive;
         font-size: 1.8rem;
-        color: oklch(85% 0.15 85); /* Bright gold */
+        color: oklch(85% 0.15 85); /* Default gold for dark */
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         margin-bottom: 2rem;
         opacity: 0;
         transform: translateY(10px);
         transition: all 1s ease;
         text-align: center;
+    }
+
+    [data-theme="light"] #blessing-text {
+        color: #333333; /* Dark ink color for light mode */
+        text-shadow: none;
     }
 
     #blessing-text.show {
