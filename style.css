@@ -6,8 +6,20 @@
         --color-bg: oklch(20% 0.05 230);
         --color-primary: oklch(70% 0.2 260);
         --color-text: oklch(95% 0.01 230);
+        --container-bg: oklch(25% 0.05 230 / 0.5);
+        --container-border: oklch(70% 0.2 260 / 0.2);
+        --shadow-color: oklch(0 0 0 / 0.2);
         --font-body: 'Helvetica Neue', sans-serif;
         --font-display: 'Arial Black', sans-serif;
+    }
+
+    [data-theme="light"] {
+        --color-bg: oklch(98% 0.01 230);
+        --color-primary: oklch(60% 0.15 260);
+        --color-text: oklch(20% 0.05 230);
+        --container-bg: oklch(100% 0 / 0.8);
+        --container-border: oklch(60% 0.15 260 / 0.1);
+        --shadow-color: oklch(0 0 0 / 0.05);
     }
 
     body {
@@ -19,6 +31,7 @@
         place-content: center;
         min-height: 100vh;
         overflow: hidden; /* Hide noise overflow */
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     body::before {
@@ -32,24 +45,51 @@
         z-index: -1;
     }
 
+    [data-theme="light"] body::before {
+        opacity: 0.02;
+    }
+
     h1 {
         font-family: var(--font-display);
         font-size: clamp(2rem, 5vw, 3.5rem);
         text-align: center;
         margin-bottom: 2rem;
-        text-shadow: 0 0 10px oklch(70% 0.2 260 / 0.5), 0 0 20px oklch(70% 0.2 260 / 0.3);
+        text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
     }
 }
 
 @layer components {
     .container {
+        position: relative;
         text-align: center;
-        padding: 2rem;
-        background: oklch(25% 0.05 230 / 0.5);
+        padding: 3rem 2rem 2rem;
+        background: var(--container-bg);
         border-radius: 20px;
         backdrop-filter: blur(10px);
-        border: 1px solid oklch(70% 0.2 260 / 0.2);
-        box-shadow: 0 10px 30px oklch(0 0 0 / 0.2), 0 0 0 1px oklch(70% 0.2 260 / 0.1);
+        border: 1px solid var(--container-border);
+        box-shadow: 0 10px 30px var(--shadow-color), 0 0 0 1px oklch(70% 0.2 260 / 0.1);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    #theme-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: 1px solid var(--container-border);
+        color: var(--color-text);
+        padding: 0.5rem;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+
+    #theme-toggle:hover {
+        background: var(--container-border);
+        transform: rotate(15deg);
     }
 
     #numbers-container {
