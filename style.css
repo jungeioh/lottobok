@@ -163,8 +163,8 @@
         place-content: center;
         font-family: var(--font-display);
         font-size: 1.2rem;
-        color: #FFFFFF; /* Pure white for contrast */
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        color: #000000;
+        text-shadow: none;
         
         /* 3D Gold Gradient */
         background: radial-gradient(circle at 30% 30%, #FFE066 0%, #AA793E 50%, #5A3910 100%);
@@ -184,9 +184,8 @@
         /* Ruby Red Gemstone Gradient */
         background: radial-gradient(circle at 30% 30%, #FF6B6B 0%, #C0392B 50%, #641E16 100%);
         
-        /* Consistent white text with shadow */
-        color: #FFFFFF;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        color: #000000;
+        text-shadow: none;
         
         /* Distinct red border and glow, but keep base shadows */
         border: 1px solid #922B21;
