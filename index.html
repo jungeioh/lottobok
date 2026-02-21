@@ -55,12 +55,12 @@
             <div id="disqus_thread"></div>
             <script>
                 var disqus_config = function () {
-                    this.page.url = window.location.href;
+                    this.page.url = window.location.href.split(/[?#]/)[0]; // Remove query/hash for cleaner matching
                     this.page.identifier = 'blog-product-main';
                 };
                 (function() { // DON'T EDIT BELOW THIS LINE
                 var d = document, s = d.createElement('script');
-                s.src = 'https://blog-product-pages-dev.disqus.com/embed.js';
+                s.src = 'https://https-blog-product-pages-dev.disqus.com/embed.js';
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
                 })();
