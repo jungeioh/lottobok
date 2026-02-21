@@ -3,10 +3,14 @@
 // Splash Screen Removal Logic
 window.addEventListener('load', () => {
     const splash = document.getElementById('splash-screen');
+    const container = document.querySelector('.container');
     
     // Hold for 3 seconds total (1.5s fade-in + 1.5s display)
     setTimeout(() => {
         splash.classList.add('fade-out');
+        
+        // Show main content as splash fades out
+        if (container) container.classList.add('show');
         
         // Fully remove from DOM after fade-out transition completes (1.5s)
         setTimeout(() => {

@@ -83,7 +83,12 @@
         backdrop-filter: blur(10px);
         border: 1px solid var(--container-border);
         box-shadow: 0 10px 30px var(--shadow-color), 0 0 0 1px oklch(70% 0.2 260 / 0.1);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
+        transition: background-color 0.3s ease, border-color 0.3s ease, opacity 1s ease;
+        opacity: 0; /* Hidden initially */
+    }
+
+    .container.show {
+        opacity: 1; /* Fade in when splash is gone */
     }
 
     #theme-toggle {
