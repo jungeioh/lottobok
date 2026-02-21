@@ -1,4 +1,4 @@
-/* main.js - Lotto Generator with Theme Support and Bonus Numbers */
+/* main.js - 대박 로또 with Theme Support and Bonus Numbers */
 const generateBtn = document.getElementById('generate-btn');
 const numbersContainer = document.getElementById('numbers-container');
 const themeToggle = document.getElementById('theme-toggle');
