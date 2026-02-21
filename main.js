@@ -341,9 +341,11 @@ const winningResult = document.getElementById('winning-result');
 if (roundInput) roundInput.value = getLastDrawnRound();
 
 async function fetchLottoResult(drwNo) {
-    const url = `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${drwNo}`;
-    const response = await fetch(url);
-    return response.json();
+    const targetUrl = `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${drwNo}`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+    const response = await fetch(proxyUrl);
+    const data = await response.json();
+    return JSON.parse(data.contents);
 }
 
 function formatPrize(amount) {
