@@ -145,16 +145,37 @@ let stream = null;
 // Open Camera
 faceBtn.addEventListener('click', async () => {
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: 'user' } 
-        });
+        cameraStatus.textContent = "카메라를 준비하고 있습니다...";
+        
+        const constraints = { 
+            video: { 
+                facingMode: 'user',
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            } 
+        };
+        
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        
         video.srcObject = stream;
-        cameraModal.style.display = 'flex';
-        setTimeout(() => cameraModal.classList.add('show'), 10);
-        cameraStatus.textContent = "얼굴을 화면에 맞춰주세요";
+        
+        // Ensure video is playing before showing the modal
+        video.onloadedmetadata = () => {
+            video.play();
+            cameraModal.style.display = 'flex';
+            setTimeout(() => cameraModal.classList.add('show'), 10);
+            cameraStatus.textContent = "얼굴을 화면에 맞춰주세요";
+        };
+        
     } catch (err) {
-        alert("카메라 접근 권한이 필요합니다. 브라우저 설정에서 카메라 권한을 허용해주세요.");
-        console.error(err);
+        console.error("Camera Error: ", err);
+        let errorMsg = "카메라를 켤 수 없습니다.";
+        if (err.name === 'NotAllowedError') {
+            errorMsg = "카메라 접근 권한이 거부되었습니다. 브라우저 설정에서 카메라 권한을 허용해주세요.";
+        } else if (err.name === 'NotFoundError') {
+            errorMsg = "카메라 장치를 찾을 수 없습니다.";
+        }
+        alert(errorMsg);
     }
 });
 
