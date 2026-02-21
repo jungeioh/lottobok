@@ -43,22 +43,49 @@ function generateLottoNumbers(rowIndex) {
     while (numbers.size < 6) {
         numbers.add(Math.floor(Math.random() * 45) + 1);
     }
+    const mainNumbers = Array.from(numbers).sort((a, b) => a - b);
+    
+    // Generate 1 bonus number that doesn't overlap with main numbers
+    let bonusNumber;
+    do {
+        bonusNumber = Math.floor(Math.random() * 45) + 1;
+    } while (numbers.has(bonusNumber));
 
-    displayNumbers(Array.from(numbers), rowIndex);
+    displayNumbers(mainNumbers, bonusNumber, rowIndex);
 }
 
-function displayNumbers(numbers, rowIndex) {
+function displayNumbers(mainNumbers, bonusNumber, rowIndex) {
     const rowEl = document.createElement('div');
     rowEl.classList.add('number-row');
-    numbers.sort((a, b) => a - b).forEach((number, index) => {
-        const numberEl = document.createElement('div');
-        numberEl.classList.add('number');
-        numberEl.textContent = number;
-        numberEl.style.backgroundColor = getNumberColor(number);
-        numberEl.style.animationDelay = `${rowIndex * 0.2 + index * 0.1}s`;
+    
+    // Display main numbers
+    mainNumbers.forEach((number, index) => {
+        const numberEl = createNumberElement(number, rowIndex, index);
         rowEl.appendChild(numberEl);
     });
+
+    // Add "+" separator
+    const plusEl = document.createElement('div');
+    plusEl.classList.add('plus-sign');
+    plusEl.textContent = '+';
+    plusEl.style.animationDelay = `${rowIndex * 0.2 + 0.6}s`;
+    rowEl.appendChild(plusEl);
+
+    // Display bonus number
+    const bonusEl = createNumberElement(bonusNumber, rowIndex, 6, true);
+    rowEl.appendChild(bonusEl);
+
     numbersContainer.appendChild(rowEl);
+}
+
+function createNumberElement(number, rowIndex, index, isBonus = false) {
+    const numberEl = document.createElement('div');
+    numberEl.classList.add('number');
+    if (isBonus) numberEl.classList.add('bonus');
+    numberEl.textContent = number;
+    numberEl.style.backgroundColor = getNumberColor(number);
+    numberEl.style.animationDelay = `${rowIndex * 0.2 + index * 0.1}s`;
+    return numberEl;
 }
 
 function getNumberColor(number) {
