@@ -226,15 +226,15 @@ captureBtn.addEventListener('click', () => {
 
         const reading = generateFaceReading(pixelSum);
         displayFaceReading(reading);
-        generateFaceLottoRows(pixelSum);
         
+        // Stop camera and close modal first
         stopCamera();
         
-        // Success feedback
-        alert("관상 분석을 통한 행운의 번호가 도착했습니다!");
-        
-        // Scroll to numbers instead of switching tabs
-        numbersContainer.scrollIntoView({ behavior: 'smooth' });
+        // Then generate and show numbers with a small delay for smooth transition
+        setTimeout(() => {
+            generateFaceLottoRows(pixelSum);
+            numbersContainer.scrollIntoView({ behavior: 'smooth' });
+        }, 400);
 
     }, 3000); // 3-second scan simulation
 });
