@@ -1,5 +1,74 @@
 /* main.js - 대박 로또 with Theme Support and Bonus Numbers */
 
+// --- Web Audio API: 범종 사운드 ---
+let audioCtx = null;
+
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
+function playBellSound() {
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+
+    // 기본음: 묵직한 범종 (deep bell fundamental)
+    const osc1 = audioCtx.createOscillator();
+    const g1 = audioCtx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(130, t);
+    osc1.frequency.exponentialRampToValueAtTime(85, t + 0.4);
+    g1.gain.setValueAtTime(0.15, t);
+    g1.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+    osc1.connect(g1);
+    g1.connect(audioCtx.destination);
+    osc1.start(t);
+    osc1.stop(t + 0.45);
+
+    // 배음: 금속성 울림 (metallic overtone)
+    const osc2 = audioCtx.createOscillator();
+    const g2 = audioCtx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(340, t);
+    osc2.frequency.exponentialRampToValueAtTime(200, t + 0.2);
+    g2.gain.setValueAtTime(0.05, t);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    osc2.connect(g2);
+    g2.connect(audioCtx.destination);
+    osc2.start(t);
+    osc2.stop(t + 0.2);
+
+    // 타격음: 짧은 노이즈 (strike transient)
+    const bufLen = Math.floor(audioCtx.sampleRate * 0.03);
+    const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+    const ch = buf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) {
+        ch[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufLen * 0.15));
+    }
+    const noise = audioCtx.createBufferSource();
+    const gn = audioCtx.createGain();
+    noise.buffer = buf;
+    gn.gain.setValueAtTime(0.08, t);
+    gn.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+    noise.connect(gn);
+    gn.connect(audioCtx.destination);
+    noise.start(t);
+}
+
+function scheduleBallSounds(rowCount) {
+    for (let row = 0; row < rowCount; row++) {
+        for (let i = 0; i < 8; i++) {
+            if (i === 6) continue; // 플러스 기호는 건너뜀
+            const delay = (row * 0.4 + i * 0.2) * 1000;
+            setTimeout(() => playBellSound(), delay);
+        }
+    }
+}
+
 // Splash Overlay Control
 const hideSplash = () => {
     const splash = document.getElementById('splash-overlay');
@@ -96,7 +165,9 @@ const showBlessing = (luckLevel = null) => {
 };
 
 generateBtn.addEventListener('click', () => {
+    initAudio();
     generateLottoRows();
+    scheduleBallSounds(5);
     showBlessing(null);
 });
 
@@ -232,6 +303,7 @@ function determineLuckLevel(pixelSum) {
 // Capture & Analyze
 captureBtn.addEventListener('click', () => {
     if (!stream) return;
+    initAudio();
     if (scanLine) scanLine.style.display = 'block';
     captureBtn.disabled = true;
     captureBtn.textContent = "관상 분석 중...";
@@ -267,6 +339,7 @@ captureBtn.addEventListener('click', () => {
 
             setTimeout(() => {
                 generateFaceLottoRows(pixelSum);
+                scheduleBallSounds(5);
                 showBlessing(luckLevel);
                 numbersContainer.scrollIntoView({ behavior: 'smooth' });
             }, 400);
@@ -424,12 +497,20 @@ async function lookupRound() {
         return;
     }
 
+    initAudio();
     winningResult.innerHTML = '<p class="lookup-loading">조회 중...</p>';
     lookupBtn.disabled = true;
 
     try {
         const data = await fetchLottoResult(drwNo);
         renderWinningResult(data);
+        // 당첨번호 볼 사운드 (1행: 6볼 + 보너스)
+        if (data && data.returnValue === 'success') {
+            for (let i = 0; i < 8; i++) {
+                if (i === 6) continue;
+                setTimeout(() => playBellSound(), i * 200);
+            }
+        }
     } catch (e) {
         winningResult.innerHTML = '<p class="lookup-error">조회에 실패했습니다. 잠시 후 다시 시도해주세요.</p>';
     } finally {
