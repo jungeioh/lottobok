@@ -83,12 +83,7 @@
         backdrop-filter: blur(10px);
         border: 1px solid var(--container-border);
         box-shadow: 0 10px 30px var(--shadow-color), 0 0 0 1px oklch(70% 0.2 260 / 0.1);
-        transition: background-color 0.3s ease, border-color 0.3s ease, opacity 1s ease;
-        opacity: 0; /* Hidden initially */
-    }
-
-    .container.show {
-        opacity: 1; /* Fade in when splash is gone */
+        transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
     #theme-toggle {
@@ -141,7 +136,7 @@
     }
 
     .number.bonus {
-        border: 3px solid oklch(75% 0.15 80); /* Gold-ish border for bonus */
+        border: 3px solid oklch(75% 0.15 80);
         box-shadow: 0 0 15px oklch(75% 0.15 80 / 0.4);
     }
 
@@ -161,10 +156,10 @@
         to { transform: scale(1) translateY(0); opacity: 1; }
     }
 
-    #generate-btn {
+    #generate-btn, #face-btn, #capture-btn {
         font-family: var(--font-body);
-        font-size: 1.2rem;
-        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+        padding: 0.8rem 1.5rem;
         border: none;
         border-radius: 50px;
         background-color: var(--color-primary);
@@ -174,16 +169,39 @@
         align-items: center;
         gap: 0.5rem;
         transition: all 0.3s ease;
-        box-shadow: 0 0 15px oklch(70% 0.2 260 / 0.6), 0 0 25px oklch(70% 0.2 260 / 0.4);
+        box-shadow: 0 0 15px var(--color-primary);
+        justify-content: center;
     }
 
-    #generate-btn:hover {
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+
+    #face-btn {
+        background-color: oklch(65% 0.2 150);
+        box-shadow: 0 0 15px oklch(65% 0.2 150 / 0.6);
+    }
+
+    #face-btn:hover {
+        background-color: oklch(60% 0.2 150);
         transform: translateY(-3px);
-        box-shadow: 0 5px 20px oklch(70% 0.2 260 / 0.8), 0 0 35px oklch(70% 0.2 260 / 0.6);
     }
 
-    #generate-btn svg {
+    #generate-btn:hover, #capture-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px var(--color-primary);
+    }
+
+    #generate-btn svg, #face-btn svg {
         transition: transform 0.5s ease;
+    }
+
+    #generate-btn:hover svg, #face-btn:hover svg {
+        transform: rotate(360deg);
     }
 
     .main-nav {
@@ -238,63 +256,39 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Inquiry Page Styles */
-    .inquiry-header {
-        margin-bottom: 2rem;
-    }
-
-    .inquiry-header h2 {
-        font-family: var(--font-display);
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .inquiry-header p {
-        opacity: 0.7;
-        font-size: 0.9rem;
-    }
-
-    #inquiry-form {
-        text-align: left;
-        display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
-        max-width: 450px;
-        margin: 0 auto;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .form-group label {
-        font-size: 0.85rem;
-        font-weight: bold;
-        opacity: 0.8;
-        padding-left: 0.5rem;
-    }
-
-    .form-group input,
-    .form-group textarea {
-        width: 100%;
-        padding: 0.9rem 1.2rem;
-        border-radius: 12px;
-        border: 1px solid var(--container-border);
+    .analysis-container {
         background: var(--container-bg);
-        color: var(--color-text);
-        font-family: var(--font-body);
-        font-size: 1rem;
-        box-sizing: border-box;
-        transition: all 0.3s ease;
+        padding: 2rem;
+        border-radius: 15px;
+        border: 1px solid var(--container-border);
+        text-align: left;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
-    .form-group input:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: var(--color-primary);
-        box-shadow: 0 0 10px var(--color-primary / 0.3);
+    .placeholder-text {
+        text-align: center;
+        opacity: 0.6;
+        margin: auto;
+    }
+
+    .analysis-item {
+        border-left: 3px solid var(--color-primary);
+        padding-left: 1rem;
+    }
+
+    .analysis-item h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: var(--color-primary);
+    }
+
+    .analysis-item p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        opacity: 0.9;
     }
 
     #submit-btn {
@@ -344,190 +338,14 @@
         opacity: 0.5;
     }
 
-    .container {
-        width: 90vw;
-        max-width: 700px;
-    }
-
     #comment-section {
-        width: 90vw;
-        max-width: 700px;
-        margin: 2rem auto;
+        margin-top: 2rem;
         padding: 2rem;
         text-align: left;
         background-color: rgb(255, 255, 255);
         color: rgb(40, 45, 55);
         border-radius: 12px;
         border: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    #comment-section h3 {
-        margin: 0 0 1rem 0;
-        font-family: var(--font-display);
-        color: rgb(40, 45, 55);
-    }
-
-    /* Analysis Result Styles */
-    .analysis-container {
-        background: var(--container-bg);
-        padding: 2rem;
-        border-radius: 15px;
-        border: 1px solid var(--container-border);
-        text-align: left;
-        min-height: 200px;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .placeholder-text {
-        text-align: center;
-        opacity: 0.6;
-        margin: auto;
-    }
-
-    .analysis-item {
-        border-left: 3px solid var(--color-primary);
-        padding-left: 1rem;
-    }
-
-    .analysis-item h3 {
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-        color: var(--color-primary);
-    }
-
-    .analysis-item p {
-        font-size: 0.95rem;
-        line-height: 1.6;
-        opacity: 0.9;
-    }
-
-    @media (max-width: 600px) {
-        .analysis-container {
-            padding: 1.5rem;
-        }
-    }
-
-    /* Mobile Responsiveness */
-    @media (max-width: 600px) {
-        .container {
-            padding: 2rem 1rem;
-            width: 90vw;
-            margin: 0 auto;
-        }
-
-        .number {
-            width: 40px;
-            height: 40px;
-            font-size: 1rem;
-        }
-
-        .number-row {
-            gap: 0.5rem;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-        }
-
-        .inquiry-section h2 {
-            font-size: 1.2rem;
-        }
-    }
-}
-
-/* --- Splash Screen Styles --- */
-#splash-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #0d0d0d; /* Very dark background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 1.5s ease, visibility 1.5s ease;
-}
-
-#splash-screen.fade-out {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.splash-title {
-    font-family: 'East Sea Dokdo', cursive;
-    font-size: clamp(3rem, 10vw, 6rem);
-    color: #FFD700; /* Gold color */
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-    opacity: 0;
-    animation: splashFadeIn 1.5s ease forwards;
-    letter-spacing: 5px;
-}
-
-@keyframes splashFadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-        filter: blur(10px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0);
-    }
-}
-
-/* Camera & Face Analysis Styles */
-@layer components {
-    #generate-btn, #face-btn, #capture-btn {
-        font-family: var(--font-body);
-        font-size: 1.1rem;
-        padding: 0.8rem 1.5rem;
-        border: none;
-        border-radius: 50px;
-        background-color: var(--color-primary);
-        color: white;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 15px var(--color-primary);
-        justify-content: center;
-    }
-
-    .button-group {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        margin-top: 1rem;
-        flex-wrap: wrap;
-    }
-
-    #face-btn {
-        background-color: oklch(65% 0.2 150); /* Greenish */
-        box-shadow: 0 0 15px oklch(65% 0.2 150 / 0.6);
-    }
-
-    #face-btn:hover {
-        background-color: oklch(60% 0.2 150);
-        transform: translateY(-3px);
-    }
-
-    #generate-btn:hover, #capture-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 20px var(--color-primary);
-    }
-
-    #generate-btn svg, #face-btn svg {
-        transition: transform 0.5s ease;
-    }
-
-    #generate-btn:hover svg, #face-btn:hover svg {
-        transform: rotate(360deg);
     }
 
     /* Modal */
@@ -609,4 +427,45 @@
         90% { opacity: 1; }
         100% { top: 100%; opacity: 0; }
     }
+
+    @media (max-width: 600px) {
+        .container {
+            padding: 2rem 1rem;
+            width: 95vw;
+        }
+        .number { width: 45px; height: 45px; font-size: 1rem; }
+    }
+}
+
+/* Splash Overlay Styles */
+#splash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0d0d0d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 1s ease;
+}
+
+#splash-overlay.fade-out {
+    opacity: 0;
+}
+
+.splash-title {
+    font-family: 'East Sea Dokdo', cursive;
+    font-size: clamp(3rem, 10vw, 6rem);
+    color: #FFD700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    opacity: 0;
+    animation: splashFadeIn 1.2s ease forwards;
+}
+
+@keyframes splashFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }

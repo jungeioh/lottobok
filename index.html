@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>❝ 어찌, 내가 당첨될 상인가 ❞</title>
+    <title>대박 로또</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="splash-screen">
+    <!-- Splash Overlay (Fixed) -->
+    <div id="splash-overlay">
         <div class="splash-content">
             <h1 class="splash-title">❝ 어찌, 내가 당첨될 상인가 ❞</h1>
         </div>
     </div>
 
-    <div class="container main-content">
+    <!-- Main Content Container -->
+    <div class="container">
         <button id="theme-toggle" aria-label="테마 전환">
+            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        
+        <h1>대박 로또</h1>
         
         <div class="round-info">
             제 <span id="current-round"></span> 추천 번호
@@ -44,7 +51,7 @@
         </div>
 
         <!-- Camera Modal -->
-        <div id="camera-modal" class="modal hidden">
+        <div id="camera-modal" class="modal">
             <div class="modal-content">
                 <span id="close-camera">&times;</span>
                 <h3>관상 분석</h3>
@@ -71,25 +78,25 @@
             </div>
         </section>
 
-    </div>
+        <div class="divider"></div>
 
-    <section id="comment-section">
-        <h3>댓글</h3>
-        <div id="disqus_thread"></div>
-        <script>
-            var disqus_config = function () {
-                this.page.url = window.location.href;
-                this.page.identifier = 'blog-product-main';
-            };
-            (function() {
-            var d = document, s = d.createElement('script');
-            s.src = 'https://https-blog-product-pages-dev.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </section>
+        <section id="comment-section">
+            <div id="disqus_thread"></div>
+            <script>
+                var disqus_config = function () {
+                    this.page.url = window.location.href;
+                    this.page.identifier = 'blog-product-main';
+                };
+                (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document, s = d.createElement('script');
+                s.src = 'https://blog-product-pages-dev.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        </section>
+    </div>
 
     <script src="main.js"></script>
 </body>
