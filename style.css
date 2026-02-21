@@ -53,8 +53,23 @@
         font-family: var(--font-display);
         font-size: clamp(2rem, 5vw, 3.5rem);
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 0.5rem;
         text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
+    }
+
+    .round-info {
+        font-family: var(--font-body);
+        font-size: 1.2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        opacity: 0.8;
+    }
+
+    #current-round {
+        color: var(--color-primary);
+        font-weight: bold;
+        text-decoration: underline;
+        text-underline-offset: 4px;
     }
 }
 
