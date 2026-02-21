@@ -223,6 +223,7 @@ function stopCamera() {
     }, 300);
 }
 
+// Capture & Analyze
 captureBtn.addEventListener('click', () => {
     if (!stream) return;
     if (scanLine) scanLine.style.display = 'block';
@@ -240,36 +241,57 @@ captureBtn.addEventListener('click', () => {
         let pixelSum = 0;
         for (let i = 0; i < frameData.length; i += 500) { pixelSum += frameData[i]; }
 
-        const reading = generateFaceReading(pixelSum);
+        // 1. Determine Luck Level First (Shared State)
+        const luckLevel = determineLuckLevel(pixelSum);
+
+        // 2. Generate Analysis Content based on luckLevel
+        const reading = generateFaceReading(pixelSum, luckLevel);
         displayFaceReading(reading);
         
         stopCamera();
         
         setTimeout(() => {
             generateFaceLottoRows(pixelSum);
-            showBlessing(reading.luckLevel); // Pass detected luck level
+            // 3. Show Blessing using the SAME luckLevel
+            showBlessing(luckLevel); 
             numbersContainer.scrollIntoView({ behavior: 'smooth' });
         }, 400);
     }, 3000);
 });
 
-function generateFaceReading(seed) {
-    const wealthReadings = ["이마가 넓어 초년운이 좋으며...", "콧망울이 단단하여 재물이 쌓일 상...", "입술 끝이 올라가 복을 놓치지 않을 상...", "눈매가 깊어 횡재수가 따를 상..."];
-    const personalityReadings = ["리더의 기질이 있습니다.", "귀인의 도움을 받을 성격입니다.", "인내심이 강한 우직함이 돋보입니다.", "예술적인 감각이 뛰어납니다."];
-    const luckReadings = ["큰 행운이 찾아올 시기입니다.", "자신의 분야에서 이름을 알릴 운명입니다.", "말년까지 평안한 복을 누릴 상입니다.", "안정적인 성공 가도를 달릴 것입니다."];
-    
-    // Logic to determine luck level (good, normal, bad)
-    // We'll use the seed to pick a level
-    const levelIndex = seed % 10;
-    let luckLevel = "normal";
-    if (levelIndex > 6) luckLevel = "good";      // 30% chance for good
-    else if (levelIndex < 2) luckLevel = "bad";  // 20% chance for bad
-    else luckLevel = "normal";                   // 50% chance for normal
+const analysisData = {
+    good: {
+        wealth: ["이마가 넓고 빛이 나니 재물이 마르지 않을 대부의 상입니다.", "콧망울이 웅장하여 평생 돈 걱정 없이 풍족하게 지낼 운명입니다.", "입술 끝이 야무지게 올라가 들어온 복을 절대 놓치지 않을 상입니다."],
+        personality: ["도량이 넓고 기세가 당당하니 만인을 거느릴 우두머리의 기질입니다.", "총기가 넘치고 신의가 두터워 주변의 존경을 한몸에 받을 인품입니다."],
+        luck: ["필시 대운이 깃들었으니, 곧 천하를 호령할 기회가 찾아올 것입니다.", "길운이 문 앞까지 당도했으니 하는 일마다 술술 풀릴 만사형통의 상입니다."]
+    },
+    normal: {
+        wealth: ["재물운이 평탄하니 성실히 정진하면 안락한 삶을 누릴 상입니다.", "들어오는 돈과 나가는 돈이 균형을 이루니 큰 굴곡 없는 운세입니다."],
+        personality: ["성품이 온화하고 매사에 신중하니 주변과 마찰 없이 평온할 상입니다.", "융통성이 있고 사교적이니 어디서든 환영받는 원만한 성격입니다."],
+        luck: ["노력한 만큼 결실을 맺는 정직한 운이니 조급해하지 마시게.", "평범함 속에 비범함이 숨어있으니 묵묵히 제 자리를 지키는 것이 상책입니다."]
+    },
+    bad: {
+        wealth: ["재물운이 다소 정체되어 있으니 무리한 투자는 삼가는 것이 좋겠네.", "지갑에 구멍이 난 듯 돈이 새나갈 수 있으니 절약이 미덕인 시기입니다."],
+        personality: ["고집이 세고 독단적일 수 있으니 타인의 조언에 귀를 기울이시게.", "마음이 불안정하고 예민한 시기이니 명상을 통해 평정심을 찾으세요."],
+        luck: ["기운이 탁하고 장애물이 많으니 이번 주는 자중하며 때를 기다리게.", "먹구름이 가득하니 섣불리 움직이지 말고 내실을 다지는 데 집중하시게."]
+    }
+};
+
+function determineLuckLevel(seed) {
+    const score = seed % 10;
+    if (score > 6) return "good";      // 30%
+    if (score < 2) return "bad";       // 20%
+    return "normal";                   // 50%
+}
+
+function generateFaceReading(seed, luckLevel) {
+    const data = analysisData[luckLevel];
+    const pick = (arr, offset) => arr[(seed + offset) % arr.length];
 
     return {
-        wealth: wealthReadings[seed % wealthReadings.length],
-        personality: personalityReadings[(seed + 7) % personalityReadings.length],
-        luck: luckReadings[(seed + 13) % luckReadings.length],
+        wealth: pick(data.wealth, 0),
+        personality: pick(data.personality, 7),
+        luck: pick(data.luck, 13),
         luckLevel: luckLevel
     };
 }
