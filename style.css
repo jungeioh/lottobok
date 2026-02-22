@@ -197,6 +197,59 @@
             inset 2px 2px 4px rgba(255,255,255,0.4);
     }
 
+    /* Placeholder balls (initial ? state) */
+    .number.placeholder {
+        color: rgba(0, 0, 0, 0.25);
+        font-size: 1.4rem;
+        animation: placeholderPulse 2.5s ease-in-out infinite;
+    }
+
+    .number.bonus.placeholder {
+        animation: placeholderPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes placeholderPulse {
+        0%, 100% { filter: brightness(1); }
+        50% { filter: brightness(1.2) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3)); }
+    }
+
+    /* Analysis loading */
+    .analysis-loading {
+        text-align: center;
+        padding: 2.5rem 1rem;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .analysis-step {
+        font-family: 'East Sea Dokdo', cursive;
+        font-size: 1.6rem;
+        color: var(--color-primary);
+        animation: stepFade 0.4s ease;
+    }
+
+    .analysis-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 215, 0, 0.2);
+        border-top-color: #FFD700;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes stepFade {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     .plus-sign {
         display: grid;
         place-content: center;
@@ -206,6 +259,10 @@
         color: var(--color-text);
         opacity: 0.6;
         animation: ballAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    }
+
+    .plus-sign.placeholder {
+        animation: none;
     }
 
     @keyframes ballAppear {

@@ -164,11 +164,86 @@ const showBlessing = (luckLevel = null) => {
     blessingText.classList.add('show');
 };
 
+// --- Placeholder Balls (Initial State) ---
+function showPlaceholderRow() {
+    numbersContainer.innerHTML = '';
+    const rowEl = document.createElement('div');
+    rowEl.classList.add('number-row');
+
+    for (let i = 0; i < 6; i++) {
+        const ball = document.createElement('div');
+        ball.classList.add('number', 'placeholder');
+        ball.textContent = '?';
+        rowEl.appendChild(ball);
+    }
+
+    const plusEl = document.createElement('div');
+    plusEl.classList.add('plus-sign', 'placeholder');
+    plusEl.textContent = '+';
+    rowEl.appendChild(plusEl);
+
+    const bonusBall = document.createElement('div');
+    bonusBall.classList.add('number', 'bonus', 'placeholder');
+    bonusBall.textContent = '?';
+    rowEl.appendChild(bonusBall);
+
+    numbersContainer.appendChild(rowEl);
+}
+
+// --- Analysis Loading Sequence ---
+const analysisSteps = [
+    '잉크 농도 측정 중...',
+    '물리 가중치 분석 중...',
+    '통계 엔진 연산 중...',
+    '번호 도출 완료!'
+];
+
+function showAnalysisLoading(callback) {
+    numbersContainer.innerHTML = '';
+    const loadingEl = document.createElement('div');
+    loadingEl.className = 'analysis-loading';
+
+    const spinner = document.createElement('div');
+    spinner.className = 'analysis-spinner';
+    loadingEl.appendChild(spinner);
+
+    const stepEl = document.createElement('p');
+    stepEl.className = 'analysis-step';
+    stepEl.textContent = analysisSteps[0];
+    loadingEl.appendChild(stepEl);
+
+    numbersContainer.appendChild(loadingEl);
+
+    let stepIndex = 0;
+    const interval = setInterval(() => {
+        stepIndex++;
+        if (stepIndex < analysisSteps.length) {
+            stepEl.style.animation = 'none';
+            void stepEl.offsetWidth;
+            stepEl.textContent = analysisSteps[stepIndex];
+            stepEl.style.animation = 'stepFade 0.4s ease';
+        }
+        if (stepIndex >= analysisSteps.length - 1) {
+            clearInterval(interval);
+            setTimeout(() => {
+                numbersContainer.innerHTML = '';
+                callback();
+            }, 400);
+        }
+    }, 500);
+}
+
+// --- Generate Button ---
 generateBtn.addEventListener('click', () => {
     initAudio();
-    generateLottoRows();
-    scheduleBallSounds(5);
+    generateBtn.disabled = true;
     showBlessing(null);
+
+    showAnalysisLoading(() => {
+        generateLottoRows();
+        scheduleBallSounds(5);
+        generateBtn.disabled = false;
+    });
 });
 
 function generateLottoRows() {
@@ -223,8 +298,8 @@ function createNumberElement(number, rowIndex, index, isBonus = false) {
     return numberEl;
 }
 
-// Initial generation
-generateLottoRows();
+// Initial state: placeholder balls (no numbers)
+showPlaceholderRow();
 
 // Tab Switching Logic
 const navBtns = document.querySelectorAll('.nav-btn');
@@ -338,10 +413,14 @@ captureBtn.addEventListener('click', () => {
             stopCamera();
 
             setTimeout(() => {
-                generateFaceLottoRows(pixelSum);
-                scheduleBallSounds(5);
-                showBlessing(luckLevel);
-                numbersContainer.scrollIntoView({ behavior: 'smooth' });
+                // 번호추천 탭으로 전환
+                document.querySelector('[data-target="lotto-section"]').click();
+                showAnalysisLoading(() => {
+                    generateFaceLottoRows(pixelSum);
+                    scheduleBallSounds(5);
+                    showBlessing(luckLevel);
+                    numbersContainer.scrollIntoView({ behavior: 'smooth' });
+                });
             }, 400);
         } catch (e) {
             console.error('Analysis error:', e);
