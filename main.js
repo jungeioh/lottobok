@@ -197,8 +197,7 @@ const currentTheme = localStorage.getItem('theme') || 'dark';
 document.documentElement.setAttribute('data-theme', currentTheme);
 updateThemeIcons(currentTheme);
 
-themeToggle.addEventListener('click', (e) => {
-    if (window._isThemeHolding && window._isThemeHolding()) return;
+themeToggle.addEventListener('click', () => {
     const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -736,41 +735,22 @@ if (privacyModal) {
     });
 }
 
-/* --- Secret Long-Press Reset (테마 버튼 3초 꾹 누르기) --- */
+/* --- Secret Rapid Click Reset (일반추천 7번 연속 클릭) --- */
 (function() {
-    const themeBtn = document.getElementById('theme-toggle');
-    let holdTimer = null;
-    let isHolding = false;
+    let clickCount = 0;
+    let resetTimer = null;
 
-    function startHold(e) {
-        if (holdTimer) return;
-        isHolding = true;
-        themeBtn.classList.add('hold-active');
-        holdTimer = setTimeout(() => {
+    generateBtn.addEventListener('click', () => {
+        clickCount++;
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => { clickCount = 0; }, 3000);
+        if (clickCount >= 7) {
+            clickCount = 0;
+            clearTimeout(resetTimer);
             localStorage.removeItem('lottoWeekly');
             localStorage.setItem(ADMIN_KEY, 'true');
-            themeBtn.classList.remove('hold-active');
-            isHolding = false;
             alert('관리자 권한으로 주간 기운이 충전되었습니다!');
             location.reload();
-        }, 3000);
-    }
-
-    function cancelHold() {
-        if (holdTimer) {
-            clearTimeout(holdTimer);
-            holdTimer = null;
         }
-        setTimeout(() => { isHolding = false; }, 50);
-        themeBtn.classList.remove('hold-active');
-    }
-
-    themeBtn.addEventListener('touchstart', startHold, { passive: true });
-    themeBtn.addEventListener('touchend', cancelHold);
-    themeBtn.addEventListener('touchcancel', cancelHold);
-    themeBtn.addEventListener('mousedown', startHold);
-    document.addEventListener('mouseup', cancelHold);
-
-    // 테마 클릭: 롱프레스 중이면 무시
-    window._isThemeHolding = function() { return isHolding; };
+    });
 })();
