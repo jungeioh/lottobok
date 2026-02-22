@@ -197,7 +197,8 @@ const currentTheme = localStorage.getItem('theme') || 'dark';
 document.documentElement.setAttribute('data-theme', currentTheme);
 updateThemeIcons(currentTheme);
 
-themeToggle.addEventListener('click', () => {
+themeToggle.addEventListener('click', (e) => {
+    if (window._isThemeHolding && window._isThemeHolding()) return;
     const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -739,15 +740,17 @@ if (privacyModal) {
 (function() {
     const themeBtn = document.getElementById('theme-toggle');
     let holdTimer = null;
+    let isHolding = false;
 
     function startHold(e) {
-        if (e.type === 'touchstart') e.preventDefault();
         if (holdTimer) return;
+        isHolding = true;
         themeBtn.classList.add('hold-active');
         holdTimer = setTimeout(() => {
             localStorage.removeItem('lottoWeekly');
             localStorage.setItem(ADMIN_KEY, 'true');
             themeBtn.classList.remove('hold-active');
+            isHolding = false;
             alert('관리자 권한으로 주간 기운이 충전되었습니다!');
             location.reload();
         }, 3000);
@@ -758,12 +761,16 @@ if (privacyModal) {
             clearTimeout(holdTimer);
             holdTimer = null;
         }
+        setTimeout(() => { isHolding = false; }, 50);
         themeBtn.classList.remove('hold-active');
     }
 
-    themeBtn.addEventListener('touchstart', startHold, { passive: false });
+    themeBtn.addEventListener('touchstart', startHold, { passive: true });
     themeBtn.addEventListener('touchend', cancelHold);
     themeBtn.addEventListener('touchcancel', cancelHold);
     themeBtn.addEventListener('mousedown', startHold);
     document.addEventListener('mouseup', cancelHold);
+
+    // 테마 클릭: 롱프레스 중이면 무시
+    window._isThemeHolding = function() { return isHolding; };
 })();
