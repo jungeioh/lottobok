@@ -737,23 +737,34 @@ if (privacyModal) {
 
 /* --- Secret Dual-Hold Reset (일반추천 + 관상추천 동시 3초 홀드) --- */
 (function() {
-    let holdState = { general: false, face: false };
     let resetTimer = null;
-    let progressStart = 0;
 
-    function startHoldCheck() {
-        if (holdState.general && holdState.face && !resetTimer) {
-            progressStart = Date.now();
-            generateBtn.classList.add('hold-active');
-            faceBtn.classList.add('hold-active');
-            resetTimer = setTimeout(() => {
-                localStorage.removeItem('lottoWeekly');
-                localStorage.setItem(ADMIN_KEY, 'true');
-                generateBtn.classList.remove('hold-active');
-                faceBtn.classList.remove('hold-active');
-                alert('관리자 권한으로 주간 기운이 충전되었습니다!');
-                location.reload();
-            }, 3000);
+    function isTouchOnBtn(touch, btn) {
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+        return el && (el === btn || btn.contains(el));
+    }
+
+    function checkTouches(e) {
+        let onGenerate = false, onFace = false;
+        for (let i = 0; i < e.touches.length; i++) {
+            if (isTouchOnBtn(e.touches[i], generateBtn)) onGenerate = true;
+            if (isTouchOnBtn(e.touches[i], faceBtn)) onFace = true;
+        }
+        if (onGenerate && onFace) {
+            if (!resetTimer) {
+                generateBtn.classList.add('hold-active');
+                faceBtn.classList.add('hold-active');
+                resetTimer = setTimeout(() => {
+                    localStorage.removeItem('lottoWeekly');
+                    localStorage.setItem(ADMIN_KEY, 'true');
+                    generateBtn.classList.remove('hold-active');
+                    faceBtn.classList.remove('hold-active');
+                    alert('관리자 권한으로 주간 기운이 충전되었습니다!');
+                    location.reload();
+                }, 3000);
+            }
+        } else {
+            cancelHold();
         }
     }
 
@@ -766,23 +777,40 @@ if (privacyModal) {
         faceBtn.classList.remove('hold-active');
     }
 
-    function onDown(btn) {
-        holdState[btn] = true;
-        startHoldCheck();
-    }
+    // 모바일: document 레벨 멀티터치 감지
+    document.addEventListener('touchstart', checkTouches, { passive: true });
+    document.addEventListener('touchend', checkTouches, { passive: true });
+    document.addEventListener('touchcancel', cancelHold, { passive: true });
 
-    function onUp(btn) {
-        holdState[btn] = false;
+    // PC: 마우스 (Ctrl+클릭 등으로는 동시 누르기 불가 → 마우스는 생략하거나 별도 처리)
+    let mouseGeneral = false, mouseFace = false;
+
+    generateBtn.addEventListener('mousedown', () => {
+        mouseGeneral = true;
+        if (mouseGeneral && mouseFace) startMouseHold();
+    });
+    faceBtn.addEventListener('mousedown', () => {
+        mouseFace = true;
+        if (mouseGeneral && mouseFace) startMouseHold();
+    });
+    document.addEventListener('mouseup', () => {
+        mouseGeneral = false;
+        mouseFace = false;
         cancelHold();
+    });
+
+    function startMouseHold() {
+        if (!resetTimer) {
+            generateBtn.classList.add('hold-active');
+            faceBtn.classList.add('hold-active');
+            resetTimer = setTimeout(() => {
+                localStorage.removeItem('lottoWeekly');
+                localStorage.setItem(ADMIN_KEY, 'true');
+                generateBtn.classList.remove('hold-active');
+                faceBtn.classList.remove('hold-active');
+                alert('관리자 권한으로 주간 기운이 충전되었습니다!');
+                location.reload();
+            }, 3000);
+        }
     }
-
-    ['mousedown', 'touchstart'].forEach(evt => {
-        generateBtn.addEventListener(evt, (e) => { e.preventDefault(); onDown('general'); }, { passive: false });
-        faceBtn.addEventListener(evt, (e) => { e.preventDefault(); onDown('face'); }, { passive: false });
-    });
-
-    ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(evt => {
-        generateBtn.addEventListener(evt, () => onUp('general'));
-        faceBtn.addEventListener(evt, () => onUp('face'));
-    });
 })();
