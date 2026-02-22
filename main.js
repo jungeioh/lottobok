@@ -193,7 +193,7 @@ function showPlaceholderRow() {
 
 // --- Analysis Loading Sequence ---
 const analysisSteps = [
-    '잉크 농도 측정 중...',
+    '물리학적 확률 계산 중...',
     '물리 가중치 분석 중...',
     '통계 엔진 연산 중...',
     '번호 도출 완료!'
