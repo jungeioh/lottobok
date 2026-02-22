@@ -89,22 +89,6 @@
         100% { filter: brightness(1.15) drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
     }
 
-    .app-logo {
-        text-align: center;
-        margin-bottom: 0.8rem;
-    }
-
-    .app-logo img {
-        width: clamp(100px, 30vw, 180px);
-        height: auto;
-        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 30px rgba(255, 215, 0, 0.3));
-        animation: logoGlow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes logoGlow {
-        0% { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.2)); }
-        100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 40px rgba(255, 215, 0, 0.4)); }
-    }
 
     .round-info {
         font-family: var(--font-body);
