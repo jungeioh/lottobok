@@ -110,6 +110,76 @@ const currentRound = getCurrentRound();
 const roundEl = document.getElementById('current-round');
 if (roundEl) roundEl.textContent = `${currentRound}회`;
 
+// --- Weekly Usage Limit (5회/주, 매주 월요일 리셋) ---
+const WEEKLY_MAX = 5;
+const weeklyLimitEl = document.getElementById('weekly-limit');
+
+function getWeekStart() {
+    const now = new Date();
+    const day = now.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    const monday = new Date(now);
+    monday.setHours(0, 0, 0, 0);
+    monday.setDate(monday.getDate() - diff);
+    return monday.getTime();
+}
+
+function getWeeklyUsage() {
+    const raw = localStorage.getItem('lottoWeekly');
+    if (!raw) return { weekStart: 0, count: 0 };
+    try { return JSON.parse(raw); } catch { return { weekStart: 0, count: 0 }; }
+}
+
+function getRemainingUses() {
+    const usage = getWeeklyUsage();
+    const currentWeek = getWeekStart();
+    if (usage.weekStart !== currentWeek) return WEEKLY_MAX;
+    return Math.max(0, WEEKLY_MAX - usage.count);
+}
+
+function incrementUsage() {
+    const currentWeek = getWeekStart();
+    const usage = getWeeklyUsage();
+    if (usage.weekStart !== currentWeek) {
+        localStorage.setItem('lottoWeekly', JSON.stringify({ weekStart: currentWeek, count: 1 }));
+    } else {
+        usage.count++;
+        localStorage.setItem('lottoWeekly', JSON.stringify(usage));
+    }
+}
+
+function getDaysUntilReset() {
+    const now = new Date();
+    const day = now.getDay();
+    const daysLeft = day === 0 ? 1 : (8 - day);
+    return daysLeft;
+}
+
+function updateLimitDisplay() {
+    if (!weeklyLimitEl) return;
+    const remaining = getRemainingUses();
+    if (remaining > 0) {
+        weeklyLimitEl.className = 'weekly-limit';
+        weeklyLimitEl.innerHTML = `이번 주 남은 천기누설: <b>${remaining}회</b>`;
+    } else {
+        const days = getDaysUntilReset();
+        weeklyLimitEl.className = 'weekly-limit exhausted';
+        weeklyLimitEl.innerHTML = `이번 주의 천기가 모두 소진되었습니다.<span class="days-left">다음 주 기운 충전까지 ${days}일 남음</span>`;
+        generateBtn.disabled = true;
+        faceBtn.disabled = true;
+    }
+}
+
+function checkWeeklyLimit() {
+    if (getRemainingUses() <= 0) {
+        alert('이번 주에 허락된 5번의 천기를 모두 확인하셨습니다.\n\n기운이 다시 모이는 다음 주에 찾아오십시오.');
+        return false;
+    }
+    return true;
+}
+
+updateLimitDisplay();
+
 // Theme Logic
 const currentTheme = localStorage.getItem('theme') || 'dark';
 document.documentElement.setAttribute('data-theme', currentTheme);
@@ -235,14 +305,17 @@ function showAnalysisLoading(callback) {
 
 // --- Generate Button ---
 generateBtn.addEventListener('click', () => {
+    if (!checkWeeklyLimit()) return;
     initAudio();
     generateBtn.disabled = true;
     showBlessing(null);
+    incrementUsage();
+    updateLimitDisplay();
 
     showAnalysisLoading(() => {
         generateLottoRows();
         scheduleBallSounds(5);
-        generateBtn.disabled = false;
+        if (getRemainingUses() > 0) generateBtn.disabled = false;
     });
 });
 
@@ -331,6 +404,7 @@ const scanLine = document.querySelector('.scan-line');
 let stream = null;
 
 faceBtn.addEventListener('click', async () => {
+    if (!checkWeeklyLimit()) return;
     try {
         cameraStatus.textContent = "카메라를 준비하고 있습니다...";
         const constraints = {
@@ -411,9 +485,10 @@ captureBtn.addEventListener('click', () => {
             displayFaceReading(reading);
 
             stopCamera();
+            incrementUsage();
+            updateLimitDisplay();
 
             setTimeout(() => {
-                // 번호추천 탭으로 전환
                 document.querySelector('[data-target="lotto-section"]').click();
                 showAnalysisLoading(() => {
                     generateFaceLottoRows(pixelSum);

@@ -265,6 +265,33 @@
         animation: none;
     }
 
+    /* --- Weekly Limit Display --- */
+    .weekly-limit {
+        text-align: center;
+        margin-bottom: 1.2rem;
+        font-family: 'East Sea Dokdo', cursive;
+        font-size: 1.4rem;
+        color: rgba(255, 215, 0, 0.7);
+        min-height: 1.8em;
+    }
+
+    [data-theme="light"] .weekly-limit {
+        color: rgba(140, 105, 20, 0.7);
+    }
+
+    .weekly-limit.exhausted {
+        color: oklch(70% 0.15 25);
+        font-size: 1.3rem;
+    }
+
+    .weekly-limit .days-left {
+        display: block;
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+        opacity: 0.6;
+    }
+
     @keyframes ballAppear {
         0% {
             transform: scale(0);
