@@ -413,8 +413,6 @@ captureBtn.addEventListener('click', () => {
             displayFaceReading(reading);
 
             stopCamera();
-            incrementUsage();
-            updateLimitDisplay();
 
             setTimeout(() => {
                 document.querySelector('[data-target="lotto-section"]').click();
